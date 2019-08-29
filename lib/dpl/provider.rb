@@ -257,9 +257,12 @@ module DPL
       password = options[:password]
       repository = options[:repository]
       if(File.directory? "tmp/storage/#{repository}")
-        context.shell 'rm -rf -v !(".keep")'
+        context.shell "cd tmp/storage; rm -rf #{repository}"
       end
       context.shell "git clone https://#{username}:#{password}@github.com/#{username}/#{repository}.git tmp/storage/#{repository}"
+      if options[:zip_file]
+        context.shell "tar -C tmp/storage -zcf #{options[:zip_file]} --exclude .git #{repository}"
+      end
     end
 
     def setup_git_ssh(path, key_path)
