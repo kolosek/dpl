@@ -87,11 +87,12 @@ module DPL
             install_cmd = "gem install #{local_gem}"
           end
 
-          # context.shell(install_cmd)
-          # Gem.clear_paths
+          context.shell(install_cmd)
+          Gem.clear_paths
 
-          # require "dpl/provider/#{GEM_NAME_OF[class_name]}"
+          require "dpl/provider/#{GEM_NAME_OF[class_name]}"
           provider = const_get(class_name).new(context, options)
+
         rescue DPL::Error
           if opt_lower
             provider = const_get(opt.capitalize).new(context, options)
@@ -199,6 +200,8 @@ module DPL
 
       context.fold("Deploying application") { push_app }
 
+      remove_archive if options[:zip_file]
+
       Array(options[:run]).each do |command|
         if command == 'restart'
           context.fold("Restarting application") { restart }
@@ -263,6 +266,10 @@ module DPL
       if options[:zip_file]
         context.shell "tar -C tmp/storage -zcf #{options[:zip_file]} --exclude .git #{repository}"
       end
+    end
+
+    def remove_archive
+      context.shell "rm #{options[:zip_file]}"
     end
 
     def setup_git_ssh(path, key_path)
