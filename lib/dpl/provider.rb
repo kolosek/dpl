@@ -264,7 +264,7 @@ module DPL
       end
       context.shell "git clone https://#{username}:#{password}@github.com/#{username}/#{repository}.git tmp/storage/#{repository}"
       if options[:zip_file]
-        context.shell "tar -C tmp/storage -zcf #{options[:zip_file]} --exclude .git #{repository}"
+        context.shell "cd tmp/storage/#{repository}; zip -r #{options[:zip_file]} ./* "
       end
     end
 
