@@ -22,7 +22,7 @@ module DPL
 
         def pack_archive
           log "creating application archive"
-          context.shell "tar -C tmp/storage -zcf #{archive_file} --exclude .git deploy_test_app"
+          context.shell "tar -C tmp/storage -zcf #{archive_file} --exclude .git #{options[:repository]}"
         end
 
         def upload_archive
