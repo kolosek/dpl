@@ -256,15 +256,12 @@ module DPL
     end
 
     def clone_git_repo
-      username = options[:username]
-      password = options[:password]
-      repository = options[:repository]
-      if(File.directory? "tmp/storage/#{repository}")
-        context.shell "cd tmp/storage; rm -rf #{repository}"
+      if(File.directory? "tmp/storage/#{options[:repository]}")
+        context.shell "cd tmp/storage; rm -rf #{options[:repository]}"
       end
-      context.shell "git clone https://#{username}:#{password}@github.com/#{username}/#{repository}.git tmp/storage/#{repository}"
+      context.shell "git clone https://#{options[:username]}:#{options[:password]}@#{options[:git]} tmp/storage/#{options[:repository]}"
       if options[:zip_file]
-        context.shell "cd tmp/storage/#{repository}; zip -r #{options[:zip_file]} ./* "
+        context.shell "cd tmp/storage/#{options[:repository]}; zip -r #{options[:zip_file]} ./* "
       end
     end
 
